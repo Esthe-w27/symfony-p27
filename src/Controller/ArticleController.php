@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -44,19 +46,25 @@ final class ArticleController extends AbstractController
 
     #[Route('/addArticle', name: 'app_article_add')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function add(EntityManagerInterface $entityManager ): Response
+    public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
         $article = new Article();
 
-        $article->setTitre('Mon article');
-        $article->setContenu('Mon contenu');
-        $article->setAuteur($this->getUser());
+        $form = $this->createForm(ArticleType::class, $article);
 
-        $entityManager->persist($article);
+        // Vérifie si le formulaire est envoyé ou non
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // récupère les données du formulaire
+            $article = $form->getData();
+            $article->setAuteur($this->getUser());
+            $entityManager->persist($article); // on ajoute l'article dans l'entity manager pour qu'il puisse s'en occuper au moment du flush
+            $entityManager->flush(); // on execute les req en BDD
+            return $this->redirectToRoute('app_article');
+        }
 
-        $entityManager->flush(); // permet d'executer les requêtes nécessaires
-
-
-        return new Response('Ajout article effectué');
+        return $this->render('article/add.html.twig', [
+            'form' => $form,
+        ]);
     }
 }
