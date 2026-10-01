@@ -9,12 +9,14 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Les catégories</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/Blog/src/Controller/CategorieController.php</code></li>
-        <li>Your template at <code>D:/Blog/templates/categorie/index.html.twig</code></li>
-    </ul>
+    {% for categorie in categories %}
+        {{ categorie.nom  }} - <a href="{{ path('app_categorie_edit', {'id' : categorie.id}) }}">Modifier</a>
+        - <a onclick="return confirm('Voulez vous supprimer cette catégorie');" href="{{ path('app_categorie_delete', {'id' : categorie.id}) }}">Supprimer</a>
+        <br>
+    {% endfor %}
+
+    <a href="{{ path('app_categorie_add') }}">Ajouter une catégorie</a>
 </div>
 {% endblock %}
