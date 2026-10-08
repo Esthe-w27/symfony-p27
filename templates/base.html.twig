@@ -20,5 +20,9 @@
     </head>
     <body>
         {% block body %}{% endblock %}
+        <nav>
+            <a href="{{ path('evenement_index') }}">Événements</a> |
+            <a href="{{ path('lieu_index') }}">Lieux</a>
+        </nav>
     </body>
 </html>

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ evenement.nom }}</h1>
+    <p>{{ evenement.description }}</p>
+    <p>Date : {{ evenement.date|date('d/m/Y H:i') }}</p>
+    <p>Lieu : {{ evenement.lieu.nom }}</p>
+    <p>Créé par : {{ evenement.createur.userIdentifier }}</p>
+
+    <a href="{{ path('evenement_index') }}">Retour</a>
+
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('evenement_edit', {id: evenement.id}) }}">Modifier</a>
+        <a href="{{ path('evenement_delete', {id: evenement.id}) }}">Supprimer</a>
+    {% endif %}
+{% endblock %}

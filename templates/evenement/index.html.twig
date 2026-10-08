@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Événements</h1>
+
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('evenement_new') }}">Ajouter un événement</a>
+    {% endif %}
+
+    <h2>À venir</h2>
+    {% for e in evenements %}
+        {% if e.date >= date() %}
+            <p>
+                <a href="{{ path('evenement_show', {id: e.id}) }}">{{ e.nom }}</a>
+                - {{ e.date|date('d/m/Y H:i') }} - {{ e.lieu.nom }}
+            </p>
+        {% endif %}
+    {% endfor %}
+
+    <h2>Passés</h2>
+    {% for e in evenements %}
+        {% if e.date < date() %}
+            <p>
+                <a href="{{ path('evenement_show', {id: e.id}) }}">{{ e.nom }}</a>
+                - {{ e.date|date('d/m/Y H:i') }} - {{ e.lieu.nom }}
+            </p>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Lieux</h1>
+
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('lieu_new') }}">Ajouter un lieu</a>
+    {% endif %}
+
+    {% for lieu in lieux %}
+        <p>
+            <a href="{{ path('lieu_evenements', {id: lieu.id}) }}">{{ lieu.nom }}</a> ({{ lieu.adresse }})
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('lieu_edit', {id: lieu.id}) }}">Modifier</a>
+                <a href="{{ path('lieu_delete', {id: lieu.id}) }}">Supprimer</a>
+            {% endif %}
+        </p>
+    {% endfor %}
+{% endblock %}
